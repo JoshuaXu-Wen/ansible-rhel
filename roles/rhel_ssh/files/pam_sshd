@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MIT-0
+#%PAM-1.0
+# PAM stack for sshd — RHEL 9 layout (matches stock OpenSSH + authselect shared stacks).
+# Intended deployment: /etc/pam.d/sshd (backup the vendor file first).
+# Relies on: password-auth, postlogin, pam_selinux, pam_namespace (openssh-server).
+
+auth       substack     password-auth
+auth       include      postlogin
+account    required     pam_sepermit.so
+account    required     pam_nologin.so
+account    include      password-auth
+password   include      password-auth
+# pam_selinux.so close should be the first session rule
+session    required     pam_selinux.so close
+session    required     pam_loginuid.so
+# pam_selinux.so open should only be followed by sessions to be executed in the user context
+session    required     pam_selinux.so open env_params
+session    required     pam_namespace.so
+session    optional     pam_keyinit.so force revoke
+session    optional     pam_motd.so
+session    include      password-auth
+session    include      postlogin

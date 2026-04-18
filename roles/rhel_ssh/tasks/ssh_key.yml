@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_ssh_key
+- name: Add authorized_keys file
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: "{{ lookup('file', 'public_keys.pub') }}"
+
+# the password should be encrypted
+- name: Add root password
+  ansible.builtin.user:
+    name: root
+    password: "{{ root_password }}"

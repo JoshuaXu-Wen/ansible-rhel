@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_swap
+- name: Create swap partition
+  ansible.builtin.template:
+    src: 00-azure-swap.cfg.j2
+    dest: "{{ cloud_cfg_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+    force: true
+
+- name: Set environment variable
+  ansible.builtin.lineinfile:
+    regexp: "^DefaultEnvironment="
+    line: DefaultEnvironment="CLOUD_CFG={{ cloud_cfg_file }}"
+    path: /etc/systemd/system.conf

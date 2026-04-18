@@ -1,0 +1,14 @@
+# cloud-config
+disk_setup:
+  ephemeral0:
+    table_type: gpt
+    layout: [ {{ file_ratio }}, [{{ swap_ratio }}, 82 ]]
+    overwrite: True
+fs_setup:
+  - device: ephemeral0.1
+    filesystem: ext4
+  - device: ephemeral0.2
+    filesystem: swap
+mounts:
+  - [ "ephemeral0.1", "/mnt" ]
+  - [ "ephemeral0.2", "none", "swap", "sw,nofail,x-systemd.requires=cloud-init.service", "0", "0" ]

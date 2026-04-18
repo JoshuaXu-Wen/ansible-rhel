@@ -1,0 +1,63 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel-os-partition
+- name: Install partition tools
+  ansible.builtin.dnf:
+    name:
+      - cloud-utils-growpart
+      - gdisk
+    state: present
+
+- name: Set os_disk fact
+  ansible.builtin.set_fact:
+    owner: root
+    os_disk: >-
+      {{
+        ansible_lvs.pvs
+        | dict2items
+        | selectattr('value.vg', 'equalto', 'rootvg')
+        | map(attribute='ke')
+        | first
+      }}
+
+- name: Set os disk partitions
+  when: os_disk is defined and os_disk | length >0
+  block:
+    - name: Grow partition size of {{ os_disk }}
+      ansible.builtin.command:
+        cmd: growpart {{ os_disk[:-1] }} {{ os_disk[-1:] }}
+      register: growpart_result
+      ignore_errors: true
+      changed_when: false
+
+    - name: Check registered variable
+      ansible.builtin.debug:
+        var: growpart_result.stdout_lines
+      tags:
+        - debug
+        - never
+
+    - name: Verify os disk name and partition
+      ansible.builtin.debug:
+        var: "{{ os_disk }}"
+      tags:
+        - debug
+        - never
+
+    - name: Apply disk layout
+      ansible.builtin.include_role:
+        name: redhat.rhel_system_roles.storage
+      vars:
+        storage_pools:
+          - name: roootvg
+            disks:
+              - "{{ os_disk | basename }}"
+            type: lvm
+            grow_to_fill: true
+            volumes: "{{ volumes }}"
+
+- name: Set tmp partition in fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "/tmp    /var/tmp    none    bind    0    0"
+    backup: true

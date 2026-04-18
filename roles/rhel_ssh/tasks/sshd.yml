@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_sshd
+- name: Configure sshd config
+  ansible.builtin.copy:
+    src: sshd_config.conf
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: "0600"
+  notify: Restart sshd
+
+- name: Configure banner
+  ansible.builtin.copy:
+    src: banner
+    dest: /etc/issue
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Configure motd
+  ansible.builtin.template:
+    src: motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

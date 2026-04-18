@@ -1,0 +1,16 @@
+---
+- name: Include ssh key tasks
+  ansible.builtin.include_tasks:
+    file: ssh_key.yml
+- name: Include sshd tasks
+  ansible.builtin.include_tasks:
+    file: sshd.yml
+
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Include pam auth tasks
+  ansible.builtin.include_tasks:
+    file: pam_auth.yml
+  when: "'authselect' not in ansible_facts.packages"

@@ -1,0 +1,45 @@
+# SPDX-License-Identifier: MIT-0
+---
+# defaults file for rhel-os-partition
+fs_type: xfs
+rootlv_size: 2G
+homelv_size: 20G
+optlv_size: 10G
+usrlv_size: 10G
+tmplv_size: 10G
+varlv_size: 15G
+varloglv_size: 10G
+auditloglv_size: 2G
+volumes:
+  - name: rootlv
+    size: "{{ rootlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/"
+  - name: homelv
+    size: "{{ homelv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/home"
+  - name: optlv
+    size: "{{ optlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/opt"
+  - name: usrlv
+    size: "{{ usrlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/usr"
+  - name: tmplv
+    size: "{{ tmplv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/tmp"
+  - name: varlv
+    size: "{{ varlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/var"
+  - name: varloglv
+    size: "{{ varloglv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/var/log"
+  - name: auditloglv
+    size: "{{ varloglv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/var/log/audit"

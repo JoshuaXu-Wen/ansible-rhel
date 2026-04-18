@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_logrotation
+- name: Copy logrotate.conf
+  ansible.builtin.copy:
+    src: logrotate.conf
+    dest: /etc/logrotate.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart logrotate
+
+- name: Copy rsyslog
+  ansible.builtin.copy:
+    src: rsyslog
+    dest: /etc/rsyslog.d/rsyslog
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart logrotate
+
+# some RHEL image changes the /var/log/ files SELinux label to unlabled_t,
+# restore the label to default label to solve the permission issue.
+- name: Configure SELinux label for /var/log/
+  ansible.builtin.command:
+    cmd: restorecon -Rv /var/log/
+  changed_when: false

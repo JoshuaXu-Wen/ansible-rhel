@@ -1,0 +1,25 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_clean
+- name: Clean up old kernels and dnf cache
+  ansible.builtin.shell:
+    cmd: dnf -y remove --oldinstallonly && dnf clean all
+  changed_when: false
+
+- name: Clean up logs and history files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ logfiles }}"
+
+- name: Clean up tmp files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ lookup('ansible.builtin.fileglob', '/tmp/*') }}"
+
+- name: Clean up dnf cache files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop: "{{ lookup('ansible.builtin.fileglob', '/var/cache/dnf/*') }}"

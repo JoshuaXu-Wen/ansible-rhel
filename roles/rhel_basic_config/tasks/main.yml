@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_basic_config
+
+- name: Set system locale
+  ansible.builtin.command:
+    cmd: localectl set-locale LANG=en_US.UTF-8
+  changed_when: false
+
+- name: Set system keyboard layout and FONT
+  ansible.builtin.copy:
+    src: vconsole.conf
+    dest: /etc/vconsole.conf
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Set system timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: Disable bluetooth service
+  ansible.builtin.systemd_service:
+    name: bluetooth
+    state: stopped
+    enabled: false
+  ignore_errors: true
+
+- name: Enable audit
+  ansible.builtin.command:
+    cmd: grubby --update-kernel=ALL --args="audit=1"
+  changed_when: true

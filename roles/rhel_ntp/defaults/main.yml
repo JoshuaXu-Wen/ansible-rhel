@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT-0
+---
+# defaults file for rhel_ntp
+ntp_servers:
+  - hostname: "{{ ntp_server1 | default('nz.pool.ntp.org') }}"
+    iburst: true
+  - hostname: "{{ ntp_server2 | default('0.rhel.pool.ntp.org') }}"
+    iburst: true

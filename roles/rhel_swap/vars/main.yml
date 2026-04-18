@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT-0
+---
+# vars file for rhel_swap
+cloud_cfg_file: /etc/cloud/cloud.cfg.d/00-azure-swap.cfg

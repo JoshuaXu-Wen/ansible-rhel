@@ -1,0 +1,59 @@
+---
+- name: RHEL Image Build
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Disable SELinux to avoid the permission issue
+      ansible.posix.selinux:
+        policy: targeted
+        state: permissive
+
+  tasks:
+    - name: Include role of rhel_rhsm
+      ansible.builtin.include_role:
+        name: rhel_rhsm
+        tasks_from: register.yml
+
+    - name: Include role of disk partition
+      ansible.builtin.include_role:
+        name: rhel_os_partition
+
+    - name: Includ role of package install
+      ansible.builtin.include_role:
+        name: rhel_package_install
+
+    - name: Update packages to latest
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+
+    - name: Include role of basic config
+      ansible.builtin.include_role:
+        name: rhel_basic_config
+
+    - name: Include role of ntp
+      ansible.builtin.include_role:
+        name: rhel_ntp
+
+    - name: Include role of log rotation
+      ansible.builtin.include_role:
+        name: rhel_logrotation
+
+    - name: Include role of ssh config
+      ansible.builtin.include_role:
+        name: rhel_ssh
+
+    - name: Include role of swap partition
+      ansible.builtin.include_role:
+        name: rhel_swap
+
+    - name: Include role of cleanup
+      ansible.builtin.include_role:
+        name: rhel_cleanup
+
+  post_tasks:
+    - name: Enforcing SELinux
+      ansible.posix.selinux:
+        policy: targeted
+        state: enforcing

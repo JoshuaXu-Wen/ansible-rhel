@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_rhsm
+
+- name: Remove default cloud repos
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/rh-cloud-base.repo
+    state: absent
+
+- name: Install CA on VM
+  ansible.builtin.copy:
+    src: org-rootca.cert
+    dest: "/etc/pki/ca-trust/source/anchors/"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Update CA trust
+  ansible.builtin.command:
+    cmd: update-ca-trust
+  changed_when: true
+
+- name: Register redhat satellite
+  community.general.redhat_subscription:
+    username: "{{ sat_username }}"
+    password: "{{ sat_password }}"
+    server_hostname: "{{ capsule_hostname }}"
+    activationkey: "{{ activation_key }}"
+    org_id: "{{ org_id }}"
+    environment: "{{ sat_env }}"
+    rhsm_baseurl: "{{ capsule_url }}"
+    force_register: true
+    state: present

@@ -1,0 +1,48 @@
+---
+# only use when required
+# with authselect, the PAM files are managed by authselect
+- name: Configure Pam authentications
+  notify: Restart sssd
+  block:
+    - name: Configure Pam sshd
+      ansible.builtin.copy:
+        src: pam_sshd
+        dest: /etc/pam.d/sshd
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Configure Pam system-auth
+      ansible.builtin.copy:
+        src: pam_system_auth
+        dest: /etc/pam.d/system-auth-custom
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Configure Pam password-auth
+      ansible.builtin.copy:
+        src: pam_password_auth
+        dest: /etc/pam.d/password-auth-custom
+        owner: root
+        group: root
+        mode: "0644"
+    - name: Add symlinks for system-auth
+      ansible.builtin.file:
+        src: /etc/pam.d/system-auth-custom
+        dest: /etc/pam.d/system-auth
+        owner: root
+        group: root
+        mode: "0644"
+        state: link
+        force: true
+    - name: Add symlinks for password-auth
+      ansible.builtin.file:
+        src: /etc/pam.d/password-auth-custom
+        dest: /etc/pam.d/password-auth
+        owner: root
+        group: root
+        mode: "0644"
+        state: link
+        force: true
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

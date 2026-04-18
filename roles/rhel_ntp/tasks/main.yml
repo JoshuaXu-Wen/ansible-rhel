@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_ntp
+- name: Set chrony as NTP server
+  ansible.builtin.include_role:
+    name: redhat.rhel_system_roles.timesync
+  vars:
+    timesync_ntp_servers: "{{ ntp_servers }}"
+    timesync_ntp_provider: chrony
+    timesync_dhcp_ntp_servers: true
+    timesync_ntp_ip_family: ipv4
+    timesync_chrony_custom_settings:
+      - "logdir /var/log/chrony"
+      - "local stratum 10"
+      - "leapsectz right/UTC"
+      - "logchange 0.5"
