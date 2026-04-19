@@ -7,19 +7,52 @@ This repository builds a reusable and hardened RHEL image baseline using `playbo
 ## Playbook flow (`playbook_rhel_image_build.yml`)
 
 1. Set SELinux to permissive during build.
-2. Register host to Satellite/Capsule (`rhel_rhsm`).
-3. Resize OS partition and apply LVM layout (`rhel_os_partition`).
-4. Install base packages (`rhel_package_install`).
-5. Update all packages to latest (`dnf name="*" state=latest`).
-6. Apply baseline OS settings (`rhel_basic_config`).
-7. Configure NTP/chrony (`rhel_ntp`).
-8. Configure log rotation and rsyslog (`rhel_logrotation`).
-9. Apply SSH hardening, keys, and optional PAM setup (`rhel_ssh`).
-10. Configure Azure swap behavior via cloud-init (`rhel_swap`).
-11. Remove transient/sensitive artifacts (`rhel_cleanup`).
-12. Set SELinux back to enforcing.
+2. Set persistent hostname to FQDN (`rhel_hostname_fqdn`).
+3. Configure DNS search list for DHCP client (`rhel_dns_search_domain`).
+4. Register host to Satellite/Capsule (`rhel_rhsm`).
+5. Resize OS partition and apply LVM layout (`rhel_os_partition`).
+6. Install base packages (`rhel_package_install`).
+7. Update all packages to latest (`dnf name="*" state=latest`).
+8. Apply baseline OS settings (`rhel_basic_config`).
+9. Configure NTP/chrony (`rhel_ntp`).
+10. Configure log rotation and rsyslog (`rhel_logrotation`).
+11. Apply SSH hardening, keys, and optional PAM setup (`rhel_ssh`).
+12. Configure Azure swap behavior via cloud-init (`rhel_swap`).
+13. Remove transient/sensitive artifacts (`rhel_cleanup`).
+14. Unregister from Satellite/Capsule (`rhel_rhsm`, `unregister.yml`).
+15. Set SELinux back to enforcing.
 
 ## Roles: responsibilities and variables
+
+### `rhel_hostname_fqdn`
+
+Responsibilities:
+
+- Set the persistent hostname to `{{ inventory_hostname }}.{{ domain_name }}` (systemd).
+- Render `/etc/hosts` from template so localhost entries and the host’s primary IPv4 mapping include the FQDN.
+
+Variables:
+
+- `domain_name`: DNS suffix appended to `inventory_hostname` for the FQDN (default in role defaults).
+
+Notes:
+
+- The playbook should use `gather_facts: true` so the `hosts` template can use default IPv4 facts.
+
+### `rhel_dns_search_domain`
+
+Responsibilities:
+
+- Ensure an `append domain-search` line exists in the DHCP client configuration used for DNS search domains.
+- Notify NetworkManager restart when that file changes.
+
+Variables:
+
+- `dns_search_domains`: comma-separated list of domains passed to `append domain-search` (default in role defaults).
+
+Other:
+
+- `dhclient_config_path`: path to the DHCP client config file (default `/etc/dhcp/dhclient.conf`, defined in `vars/main.yml`).
 
 ### `rhel_rhsm`
 
