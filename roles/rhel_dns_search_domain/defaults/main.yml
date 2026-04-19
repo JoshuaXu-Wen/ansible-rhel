@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT-0
+---
+# defaults file for rhel_dns_search_domain
+dns_search_domains: "manmandes.example.com, example.com"

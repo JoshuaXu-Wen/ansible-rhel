@@ -2,6 +2,9 @@
 - name: RHEL Image Build
   hosts: all
   become: true
+  gather_facts: true
+
+  vars_files: "vars/sample_variables.yml"
 
   pre_tasks:
     - name: Disable SELinux to avoid the permission issue
@@ -10,6 +13,14 @@
         state: permissive
 
   tasks:
+    - name: Change hostname to FQDN
+      ansible.builtin.include_role:
+        name: rhel_hostname_fqdn
+
+    - name: Change DNS domain search
+      ansible.builtin.include_role:
+        name: rhel_dns_search_domain
+
     - name: Include role of rhel_rhsm
       ansible.builtin.include_role:
         name: rhel_rhsm
@@ -53,6 +64,11 @@
         name: rhel_cleanup
 
   post_tasks:
+    - name: Include role of rhel_rhsm
+      ansible.builtin.include_role:
+        name: rhel_rhsm
+        tasks_from: unregister.yml
+
     - name: Enforcing SELinux
       ansible.posix.selinux:
         policy: targeted

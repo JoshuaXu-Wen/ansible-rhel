@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_dns_search_domain
+# - name: Get network interface name
+#   ansible.builtin.setup:
+
+# - name: Configure DNS Search Domain
+#   ansible.builtin.include_role:
+#     name: redhat.rhel_system_roles.network
+#   vars:
+#     network_provider: nm
+#     network_connections:
+#       - name: "{{ ansible_default_ipv4.interface }}"
+#         type: ethernet
+#         dns_search: "{{ dns_search_domains }}"
+#         ip:
+#           ipv6_disabled: true
+#       - name: "{{ ansible_default_ipv4.interface }}"
+#         state: up
+
+- name: Add DNS Search Domains
+  ansible.builtin.lineinfile:
+    path: "{{ dhclient_config_path }}"
+    regexp: '^append'
+    line: append domain-search "${{ dns_search_domains }}"
+  notify: Restart NetworkManager

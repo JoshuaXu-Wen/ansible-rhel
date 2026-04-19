@@ -14,3 +14,9 @@
   ansible.builtin.include_tasks:
     file: pam_auth.yml
   when: "'authselect' not in ansible_facts.packages"
+
+# use the linux-system-roles.pam_pwd role to configure the PAM password policy
+- name: Configure PAM password policy
+  ansible.builtin.include_role:
+    name: linux-system-roles.pam_pwd
+  when: "'authselect' in ansible_facts.packages"

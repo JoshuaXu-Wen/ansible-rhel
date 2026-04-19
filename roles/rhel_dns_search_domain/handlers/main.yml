@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MIT-0
+---
+# handlers file for rhel_dns_search_domain
+- name: Restart NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted

@@ -2,5 +2,7 @@
 ---
 # defaults file for rhel_rhsm
 capsule_hostname: "capsule-lb.manmandes.example.com"
-rhsm_baseurl: "https://capsule-lb.manmandes.example.com/pulp/content"
+capsule_url: "https://capsule-lb.manmandes.example.com/pulp/content"
+activation_key: my_activation_key
+org_id: my_org_id
 sat_env: azure

@@ -1,0 +1,88 @@
+---
+# variable for rhel_hostname_fqdn
+domain_name: manmandes.example.com
+# variable for rhel_dns_search_domain
+dns_search_domains: "example.com, manmandes.example.com"
+# variable for rhel_rhsm
+sat_username: joshua.xu
+sat_password: "I will not tell you !"
+capsule_hostname: "capsule-lb.manmandes.example.com"
+capsule_url: "https://capsule-lb.manmandes.example.com/pulp/content"
+activation_key: my_activation_key
+org_id: my_org_id
+sat_env: azure
+# variable for rhel_os_partition
+fs_type: xfs
+rootlv_size: 2G
+homelv_size: 20G
+optlv_size: 10G
+usrlv_size: 10G
+tmplv_size: 10G
+varlv_size: 15G
+varloglv_size: 10G
+auditloglv_size: 2G
+volumes:
+  - name: rootlv
+    size: "{{ rootlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/"
+  - name: homelv
+    size: "{{ homelv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/home"
+  - name: optlv
+    size: "{{ optlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/opt"
+  - name: usrlv
+    size: "{{ usrlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/usr"
+  - name: tmplv
+    size: "{{ tmplv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/tmp"
+  - name: varlv
+    size: "{{ varlv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/var"
+  - name: varloglv
+    size: "{{ varloglv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/var/log"
+  - name: auditloglv
+    size: "{{ varloglv_size }}"
+    fs_type: "{{ fs_type }}"
+    mount_point: "/var/log/audit"
+# variable for rhel_basic_config
+timezone: "Pacific/Auckland"
+# variable for rhel_ntp
+ntp_servers:
+  - hostname: "{{ ntp_server1 | default('nz.pool.ntp.org') }}"
+    iburst: true
+  - hostname: "{{ ntp_server2 | default('0.rhel.pool.ntp.org') }}"
+    iburst: true
+# variable for rhel_ssh
+root_password: "$6$rSMzbj7Rg7CY9c/g$jljuh3GdeaaPGj9gE6B69L9kwQm3xKMPKvJzEUaAfFUq4DPBGILwp1QwCNXGJAp53aIT8PHaMMpjF5Zy8EHIf/"
+# variable for rhel_swap
+file_ratio: 66
+swap_ratio: 33
+# variable for rhel_cleanup
+logfiles:
+  - '/var/log/audit/audit.log'
+  - '/var/log/cron'
+  - '/var/log/maillog'
+  - '/var/log/messages'
+  - '/var/log/secure'
+  - '/var/log/spooler'
+  - '/var/log/wtmp'
+  - '/var/log/btmp'
+  - '/var/log/lastlog'
+  - '/var/log/faillog'
+  - '/var/log/tallylog'
+  - '/root/.bash_history'
+  - '/root/.firstboot.log'
+  - '/root/anaconda-ks.cfg'
+  - '/root/.cache'
+  - '/root/.local'
+

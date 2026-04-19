@@ -1,0 +1,4 @@
+# SPDX-License-Identifier: MIT-0
+---
+# vars file for rhel_dns_search_domain
+dhclient_config_path: "/etc/dhcp/dhclient.conf"

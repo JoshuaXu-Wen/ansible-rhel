@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_hostname_fqdn
+- name: Set persistent hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}.{{ domain_name }}"
+    use: systemd
+
+- name: Update /etc/hosts with FQDN
+  ansible.builtin.template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Verify hostname change
+  ansible.builtin.command: hostname -f
+  register: hostname_check
+  changed_when: false
+  tags:
+    - debug
+    - never
+
+- name: Display current FQDN
+  ansible.builtin.debug:
+    msg: "The system FQDN is now {{ hostname_check.stdout }}"
+  tags:
+    - debug
+    - never
