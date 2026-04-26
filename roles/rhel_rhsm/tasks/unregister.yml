@@ -1,9 +1,20 @@
 # SPDX-License-Identifier: MIT-0
 ---
-- name: Unregister redhat satellite
-  community.general.redhat_subscription:
-    username: "{{ sat_username }}"
-    password: "{{ sat_password }}"
-    server_hostname: "{{ capsule_hostname }}"
-    rhsm_baseurl: "{{ capsule_url }}"
-    state: absent
+- name: Unregister host from Satellite
+  block:
+    - name: Unregister redhat satellite
+      community.general.redhat_subscription:
+        username: "{{ sat_username }}"
+        password: "{{ sat_password }}"
+        server_hostname: "{{ capsule_hostname }}"
+        rhsm_baseurl: "{{ capsule_url }}"
+        state: absent
+  rescue:
+    - name: Unregister target via redhat.satellite module
+      redhat.satellite.host:
+        server_url: "{{ sat_url }}"
+        username: "{{ sat_username }}"
+        password: "{{ sat_password }}"
+        name: "{{ ansible_fqdn }}"
+        state: absent
+      delegate_to: localhost

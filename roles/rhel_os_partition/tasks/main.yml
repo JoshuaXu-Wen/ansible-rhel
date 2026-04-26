@@ -16,7 +16,7 @@
         ansible_lvs.pvs
         | dict2items
         | selectattr('value.vg', 'equalto', 'rootvg')
-        | map(attribute='ke')
+        | map(attribute='key')
         | first
       }}
 

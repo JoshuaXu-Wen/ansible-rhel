@@ -20,14 +20,50 @@
     cmd: update-ca-trust
   changed_when: true
 
-- name: Register redhat satellite
-  community.general.redhat_subscription:
-    username: "{{ sat_username }}"
-    password: "{{ sat_password }}"
-    server_hostname: "{{ capsule_hostname }}"
-    activationkey: "{{ activation_key }}"
-    org_id: "{{ org_id }}"
-    environment: "{{ sat_env }}"
-    rhsm_baseurl: "{{ capsule_url }}"
-    force_register: true
-    state: present
+- name: Register host to Redhat Satellite-Capsule
+  block:
+    - name: Register redhat satellite
+      community.general.redhat_subscription:
+        username: "{{ sat_username }}"
+        password: "{{ sat_password }}"
+        server_hostname: "{{ capsule_hostname }}"
+        activationkey: "{{ activation_key }}"
+        org_id: "{{ org_id }}"
+        environment: "{{ sat_env }}"
+        rhsm_baseurl: "{{ capsule_url }}"
+        force_register: true
+        state: present
+  rescue:
+    # if the host can't connect to the Satellite directly due to security concerns
+    # delegate_to execution node
+    - name: Ensure the hostgroup exist
+      redhat.satellite.hostgroup:
+        server_url: "{{ sat_url }}"
+        username: "{{ sat_username }}"
+        password: "{{ sat_password }}"
+        name: "{{ hostgroup }}"
+        location: "{{ location }}"
+        lifecycle_environment: "{{ sat_env }}"
+        organization: "{{ org_id }}"
+        state: present
+      delegate_to: localhost
+
+    - name: Generate registration command
+      redhat.satellite.registration_command:
+        server_url: "{{ sat_url }}"
+        username: "{{ sat_username }}"
+        password: "{{ sat_password }}"
+        activationkey: "{{ activation_key }}"
+        organization: "{{ org_id }}"
+        hostgroup: "{{ hostgroup }}"
+        smart_proxy: "{{ capsule_hostname }}"
+        force: true
+      register: register_url
+      delegate_to: localhost
+      no_log: true
+
+    - name: Perform registration on target
+      ansible.builtin.shell:
+        cmd: "{{ register_url.registration_command }}"
+      changed_when: true
+      no_log: true

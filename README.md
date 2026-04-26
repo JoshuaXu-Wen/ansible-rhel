@@ -9,18 +9,19 @@ This repository builds a reusable and hardened RHEL image baseline using `playbo
 1. Set SELinux to permissive during build.
 2. Set persistent hostname to FQDN (`rhel_hostname_fqdn`).
 3. Configure DNS search list for DHCP client (`rhel_dns_search_domain`).
-4. Register host to Satellite/Capsule (`rhel_rhsm`).
-5. Resize OS partition and apply LVM layout (`rhel_os_partition`).
-6. Install base packages (`rhel_package_install`).
-7. Update all packages to latest (`dnf name="*" state=latest`).
-8. Apply baseline OS settings (`rhel_basic_config`).
-9. Configure NTP/chrony (`rhel_ntp`).
-10. Configure log rotation and rsyslog (`rhel_logrotation`).
-11. Apply SSH hardening, keys, and optional PAM setup (`rhel_ssh`).
-12. Configure Azure swap behavior via cloud-init (`rhel_swap`).
-13. Remove transient/sensitive artifacts (`rhel_cleanup`).
-14. Unregister from Satellite/Capsule (`rhel_rhsm`, `unregister.yml`).
-15. Set SELinux back to enforcing.
+4. Recollect ansible fact after hostname change.
+5. Register host to Satellite/Capsule (`rhel_rhsm`).
+6. Resize OS partition and apply LVM layout (`rhel_os_partition`).
+7. Install base packages (`rhel_package_install`).
+8. Update all packages to latest (`dnf name="*" state=latest`).
+9. Apply baseline OS settings (`rhel_basic_config`).
+10. Configure NTP/chrony (`rhel_ntp`).
+11. Configure log rotation and rsyslog (`rhel_logrotation`).
+12. Apply SSH hardening, keys, and optional PAM setup (`rhel_ssh`).
+13. Configure Azure swap behavior via cloud-init (`rhel_swap`).
+14. Remove transient/sensitive artifacts (`rhel_cleanup`).
+15. Unregister from Satellite/Capsule (`rhel_rhsm`, `unregister.yml`).
+16. Set SELinux back to enforcing.
 
 ## Roles: responsibilities and variables
 
@@ -64,11 +65,14 @@ Responsibilities:
 
 Variables:
 
+- `sat_url`: Satellite URL
 - `sat_username`: Satellite registration username.
 - `sat_password`: Satellite registration password.
-- `activation_key`: activation key for registration.
-- `org_id`: Satellite organization ID.
-- `sat_env`: Satellite environment (default: `azure`).
+- `activation_key`: activation key for client registration.
+- `org_id`: Satellite organization of hostgroup/client.
+- `sat_env`: Satellite environment (e.g., dev, prod, etc.).
+- `hostgroup`: hostgroup in Satellite that client will belong to.
+- `location`: location of the hostgroup.
 - `capsule_hostname`: Capsule/LB hostname.
 - `capsule_url`: RHSM content base URL (`rhsm_baseurl` in role defaults).
 

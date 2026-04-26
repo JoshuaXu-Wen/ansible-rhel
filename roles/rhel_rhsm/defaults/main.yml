@@ -5,4 +5,7 @@ capsule_hostname: "capsule-lb.manmandes.example.com"
 capsule_url: "https://capsule-lb.manmandes.example.com/pulp/content"
 activation_key: my_activation_key
 org_id: my_org_id
-sat_env: azure
+hostgroup: rhel_azure
+location: azure
+sat_url: "https://satellite.manmandes.example.com"
+sat_env: prod
