@@ -1,30 +1,35 @@
 Role Name
 =========
 
-Register NTP servers
+Install Crowdstrike
 
 Requirements
 ------------
 
-NTP Servers exist in your org.
+collections:
+
+- crowdstrike.falcon
 
 Role Variables
 --------------
 
-ntp_server1:
-ntp_server2:
-...
+```
+falcon_cid
+falcon_apd
+falcon_aph
+falcon_app
+falcon_tags
+falcon_message_log
+```
 
 Dependencies
 ------------
 
-roles:
-- redhat.rhel_system_roles.timesync
 
 Example Playbook
 ----------------
 
-playbook_rhel_ntp.yml
+playbook_rhel_crowdstrike.yml
 
 Test
 ----------------
@@ -48,4 +53,4 @@ Name: Joshua Xu
 
 Email: manmandes10010@gmail.com
 
-Data: 18/04/2026
+Data: 2/05/2026

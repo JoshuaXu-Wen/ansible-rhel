@@ -1,0 +1,14 @@
+---
+- name: Remove LV
+  community.general.lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    state: absent
+    force: true
+
+- name: Remove fstab entry
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    search_string: "{{ vg_name }}-{{ lv_name }}"
+    state: absent
+    backup: true

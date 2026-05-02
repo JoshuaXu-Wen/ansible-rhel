@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_lvm
+- name: Extend VG
+  when: operation_name == "extend_vg"
+  ansible.builtin.include_tasks:
+    file: extend_vg.yml
+
+- name: Extend LV
+  when: operation_name == "extend_lv"
+  ansible.builtin.include_tasks:
+    file: extend_lv.yml
+
+- name: Create LV
+  when: operation_name == "create_lv"
+  ansible.builtin.include_tasks:
+    file: extend_lv.yml
+
+- name: Remove LV
+  when: operation_name == "remove_lv"
+  ansible.builtin.include_tasks:
+    file: remove_lv.yml

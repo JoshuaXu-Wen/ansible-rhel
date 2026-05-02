@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT-0
+---
+# defaults file for rhel_ad
+domain_user: "{{ lookup('env', 'DOMAIN_USER') }}"
+domain_password: "{{ lookup('env', 'DOMAIN_PASSWORD') }}"
+domain_realm: "{{ lookup('env', 'DOMAIN_REALM') }}"
+domain_ou: "{{ lookup('env', 'DOMAIN_OU') }}"
+allow_rc4_crypto: "{{ lookup('env', 'ALLOW_RC4_CRYPTO') | default(false) }}"
+ntp_server: "{{ lookup('env', 'NTP_SERVER') }}"

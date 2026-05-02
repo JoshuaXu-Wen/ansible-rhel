@@ -1,30 +1,34 @@
 Role Name
 =========
 
-Register NTP servers
+1. Remove Azure inital local admin account
+2. Add AD group into local admin
 
 Requirements
 ------------
 
-NTP Servers exist in your org.
+host is machine joined
+
+None.
 
 Role Variables
 --------------
 
-ntp_server1:
-ntp_server2:
+default_admin_user: admin
+domain_user_groups: []
 ...
 
 Dependencies
 ------------
 
 roles:
-- redhat.rhel_system_roles.timesync
+
+- redhat.rhel_system_roles.ad_integration
 
 Example Playbook
 ----------------
 
-playbook_rhel_ntp.yml
+playbook_rhel_security_access.yml
 
 Test
 ----------------

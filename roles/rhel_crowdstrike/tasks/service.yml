@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_crowdstrike
+- name: Start service
+  ansible.builtin.service:
+    name: "{{ package_name }}"
+    state: started
+    enabled: true
+  register: service_result
+
+- name: Fail if service is not started
+  ansible.builtin.fail:
+    msg: "CrowdStrike Falcon Sensor service failed to start"
+  when: not service_result.state | lower == "started"

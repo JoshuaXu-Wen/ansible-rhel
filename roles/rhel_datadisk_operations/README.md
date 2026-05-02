@@ -1,30 +1,33 @@
 Role Name
 =========
 
-Register NTP servers
+RHEL Data disk operations:
+
+1. add adn mount new data disk
+2. remount data disk
+3. remove data disk
 
 Requirements
 ------------
 
-NTP Servers exist in your org.
+None.
 
 Role Variables
 --------------
 
-ntp_server1:
-ntp_server2:
+operation_name:
+mount_point:
+disk_name:
+fs_type:
 ...
 
 Dependencies
 ------------
 
-roles:
-- redhat.rhel_system_roles.timesync
-
 Example Playbook
 ----------------
 
-playbook_rhel_ntp.yml
+playbook_rhel_datadisk_operations.yml
 
 Test
 ----------------
@@ -48,4 +51,4 @@ Name: Joshua Xu
 
 Email: manmandes10010@gmail.com
 
-Data: 18/04/2026
+Data: 1/05/2026

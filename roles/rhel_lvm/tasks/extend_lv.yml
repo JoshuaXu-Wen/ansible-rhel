@@ -1,0 +1,15 @@
+---
+- name: Create / Extend LV size
+  community.general.lvol:
+    vg: "{{ vg_name }}"
+    lv: "{{ lv_name }}"
+    size: "{{ lv_size }}"
+    shrink: false
+    resizefs: true
+
+- name: Add fstab entry
+  when: mount_point is defined and mount_point | length > 0
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "/dev/mapper/{{ vg_name }}-{{ lv_name }}   {{ mount_point }}    {{ fs_type }}    defaults    0    0"
+    backup: true

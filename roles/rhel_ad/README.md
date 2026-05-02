@@ -1,30 +1,31 @@
 Role Name
 =========
 
-Register NTP servers
+Register Host to AD Domain
 
 Requirements
 ------------
 
-NTP Servers exist in your org.
+None.
 
 Role Variables
 --------------
 
-ntp_server1:
-ntp_server2:
+domain_user:
+domain_password:
+domain_realm:
+domain_ou:
+allow_rc4_crypto
+ntp_server:
 ...
 
 Dependencies
 ------------
 
-roles:
-- redhat.rhel_system_roles.timesync
-
 Example Playbook
 ----------------
 
-playbook_rhel_ntp.yml
+playbook_rhel_ad.yml
 
 Test
 ----------------

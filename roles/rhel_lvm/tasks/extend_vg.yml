@@ -1,0 +1,23 @@
+---
+- name: Get disk name from VG
+  ansible.builtin.set_fact:
+    vg_disk_name: >-
+      {{
+        ansible_lvm.pvs
+        | dict2items
+        | selectattr('value.vg', 'equalto', vg_name)
+        | map(attribute='key')
+        | first
+      }}
+
+- name: Rescan the disk to detect the new size
+  ansible.builtin.shell: |
+    echo 1 > /sys/block/{{ vg_disk_name | basename }}/device/rescan
+    sleep 3
+  changed_when: false
+
+- name: Extend the VG
+  community.general.lvg:
+    vg: "{{ vg_name }}"
+    pvs: "{{ vg_disk_name }}"
+    pvresize: true

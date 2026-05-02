@@ -1,0 +1,12 @@
+---
+- name: Rescan the disk to detect the new size
+  ansible.builtin.shell: |
+    echo 1 > /sys/block/{{ disk_name | basename }}/device/rescan
+    sleep 3
+  changed_when: false
+
+- name: Extend the data disk
+  community.general.filesystem:
+    dev: "{{ disk_name }}"
+    fstype: "{{ fs_type }}"
+    resizefs: true

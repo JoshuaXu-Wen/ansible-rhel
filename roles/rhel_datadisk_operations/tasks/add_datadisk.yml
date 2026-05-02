@@ -1,0 +1,23 @@
+---
+- name: Install required packages
+  ansible.builtin.dnf:
+    name:
+      - cloud-utils-growpart
+      - gdisk
+    state: present
+
+- name: Remove the mount entry from fstab if exists
+  ansible.posix.mount:
+    path: "{{ mount_point }}"
+    state: absent_from_fstab
+
+- name: Add / Remount the data disk
+  ansible.builtin.include_role:
+    name: redhat.rhel_system_roles.storage
+  vars:
+    storage_vloumes:
+      - name: "{{ mount_point | basename }}"
+        type: disk
+        disks: "{{ disk_name }}"
+        mount_point: "{{ mount_point }}"
+        fs_type: "{{ fs_type }}"

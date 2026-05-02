@@ -1,0 +1,14 @@
+---
+- name: Block AD domain user group from access
+  ansible.builtin.lineinfile:
+    path: "/etc/security/access.conf"
+    line: "+:{{ item }}:ALL"
+    state: absent
+    backup: true
+  loop: "{{ domain_user_groups }}"
+
+- name: Remove AD domain user group from sudoers
+  ansible.builtin.file:
+    path: "/etc/sudoers.d/01_{{ item }}_commands"
+    state: absent
+  loop: "{{ domain_user_groups }}"

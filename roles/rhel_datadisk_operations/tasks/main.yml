@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_datadisk_operations
+
+- name: Add data disk and mount
+  when: operation_name == "add_datadisk"
+  ansible.builtin.include_tasks:
+    file: add_datadisk.yml
+
+- name: Remount data disk
+  when: operation_name == "remount_datadisk"
+  ansible.builtin.include_tasks:
+    file: add_datadisk.yml
+
+- name: Extend data disk
+  when: operation_name == "extend_datadisk"
+  ansible.builtin.include_tasks:
+    file: extend_datadisk.yml
+
+- name: Remove data disk
+  when: operation_name == "delete_datadisk"
+  ansible.builtin.include_tasks:
+    file: delete_datadisk.yml

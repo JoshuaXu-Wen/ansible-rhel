@@ -1,0 +1,17 @@
+---
+- name: Add AD domain user group as admin
+  ansible.builtin.lineinfile:
+    path: "/etc/security/access.conf"
+    line: "+:{{ item }}:ALL"
+    state: present
+    backup: true
+  loop: "{{ domain_user_groups }}"
+
+- name: Add AD domain user group as admin to sudoers
+  ansible.builtin.template:
+    src: 01_group_commands.j2
+    dest: "/etc/sudoers.d/01_{{ item }}_commands"
+    owner: root
+    group: root
+    mode: "0440"
+  loop: "{{ domain_user_groups }}"

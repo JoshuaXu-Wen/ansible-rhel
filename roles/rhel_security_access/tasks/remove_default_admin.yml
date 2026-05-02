@@ -1,0 +1,21 @@
+---
+# Remove default local admin account used before AD integration
+- name: Remove default local admin account
+  ansible.builtin.user:
+    name: "{{ default_admin_user }}"
+    state: absent
+    remove: true
+
+- name: Remove default local admin from access.conf
+  ansible.builtin.lineinfile:
+    path: "/etc/security/access.conf"
+    regexp: '^\+:{{ default_admin_user }}'
+    state: absent
+    backup: true
+
+- name: Remove default local admin from sudoers
+  ansible.builtin.lineinfile:
+    path: "/etc/sudoers"
+    regexp: "^{{ default_admin_user }}"
+    state: absent
+    backup: true

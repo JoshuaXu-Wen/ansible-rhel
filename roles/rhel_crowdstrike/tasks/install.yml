@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_crowdstrike
+- name: Install CrowdStrike Falcon Sensor
+  ansible.builtin.dnf:
+    name: "{{ package_name }}"
+    state: present
+
+- name: Prevent Crowdstrike from being update
+  community.general.dnf_versionlock:
+    name: "{{ package_name }}"
+    state: present

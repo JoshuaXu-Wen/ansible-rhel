@@ -1,30 +1,32 @@
 Role Name
 =========
 
-Register NTP servers
+RHEL LVM operations:
+
+1. extend VG size
+2. create / extend LV
+3. remove lv
 
 Requirements
 ------------
 
-NTP Servers exist in your org.
+None.
 
 Role Variables
 --------------
 
-ntp_server1:
-ntp_server2:
+vg_name:
+lv_name:
+mount_point: (optional)
 ...
 
 Dependencies
 ------------
 
-roles:
-- redhat.rhel_system_roles.timesync
-
 Example Playbook
 ----------------
 
-playbook_rhel_ntp.yml
+playbook_rhel_lvm.yml
 
 Test
 ----------------
@@ -48,4 +50,4 @@ Name: Joshua Xu
 
 Email: manmandes10010@gmail.com
 
-Data: 18/04/2026
+Data: 1/05/2026

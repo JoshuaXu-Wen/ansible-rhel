@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MIT-0
+---
+# tasks file for rhel_ad
+- name: Join an Active Directory Domain
+  ansible.builtin.include_role:
+    name: redhat.rhel_system_roles.ad_integration
+  vars:
+    ad_integration_user: "{{ domain_user }}"
+    ad_integration_password: "{{ domain_password }}"
+    ad_integration_realm: "{{ domain_realm }}"
+    ad_integration_computer_ou: "{{ domain_ou }}"
+    ad_integration_allow_rc4_crypto: "{{ allow_rc4_crypto }}"
+    ad_integration_timesync_source: "{{ ntp_server }}"
+    ad_dyndns_update: true
